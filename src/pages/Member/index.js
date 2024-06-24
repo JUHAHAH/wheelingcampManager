@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 const Member = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
-    axios.get('/manage/selectAllMember').then((data) => {
+    axios.get('http://wheelingcamp.store/manage/selectAllMember').then((data) => {
       console.log(data.data);
       setData(data.data);
     });
@@ -181,13 +181,13 @@ const Member = () => {
   const openDeleteConfirmModal = async (row) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
       await axios
-        .delete('/manage/deleteMember?memberNo=' + data[row.id].memberNo)
+        .delete('http://wheelingcamp.store/manage/deleteMember?memberNo=' + data[row.id].memberNo)
         .then((result) => {
           result.status == 200
             ? alert('삭제되었습니다.')
             : alert('다시 시도해주세요.');
           
-      axios.get('/manage/selectAllMember').then((data) => {
+      axios.get('http://wheelingcamp.store/manage/selectAllMember').then((data) => {
         setData(data.data);
       });
       });
@@ -216,13 +216,13 @@ const Member = () => {
     }
 
     await axios
-    .put('/manage/insertMember', null, { params: values })
+    .put('http://wheelingcamp.store/manage/insertMember', null, { params: values })
     .then((result) => {
       
       
       table.setCreatingRow(null);
 
-      axios.get('/manage/selectAllMember').then((data) => {
+      axios.get('http://wheelingcamp.store/manage/selectAllMember').then((data) => {
         setData(data.data);
       });
     });
@@ -232,7 +232,7 @@ const Member = () => {
   // 멤버 수정
   const handleSaveUser = async ({ values, table }) => {
     await axios
-      .put('/manage/updateMember', null, { params: values })
+      .put('http://wheelingcamp.store/manage/updateMember', null, { params: values })
       .then((result) => {
         table.setEditingRow(null);
       });
