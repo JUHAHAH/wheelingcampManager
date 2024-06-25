@@ -14,7 +14,11 @@ const Member = () => {
   console.log(window.location.origin);
   useEffect(() => {
     axios
-      .get('https://wheelingcamp.store/manage/selectAllMember')
+      .get('https://wheelingcamp.store/manage/selectAllMember', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
       .then((data) => {
         console.log(data.data);
         setData(data.data);
