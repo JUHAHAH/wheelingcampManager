@@ -12,13 +12,18 @@ import React, { useEffect, useState } from 'react';
 const Member = () => {
   const [data, setData] = useState([]);
   console.log(window.location.origin);
-  useEffect(async () => {
-    await fetch('https://wheelingcamp.store/manage/selectAllMember').then(
-      (data) => {
+  useEffect(() => {
+    axios
+      .get('https://wheelingcamp.store/manage/selectAllMember', {
+        headers: {
+          'Content-type': 'application/json',
+        },
+        withCredentials: true,
+      })
+      .then((data) => {
         console.log(data.data);
         setData(data.data);
-      }
-    );
+      });
   }, []);
 
   const columns = [
