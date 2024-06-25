@@ -131,19 +131,23 @@ const Item = () => {
   };
 
   useEffect(() => {
-    const code = searchParams.get("categoryCode") == null ? 1 :
-                searchParams.get("categoryCode") == '1' ? 1 :
-                searchParams.get("categoryCode") == '2' ? 2 : 3;
+    const code =
+      searchParams.get('categoryCode') == null
+        ? 1
+        : searchParams.get('categoryCode') == '1'
+        ? 1
+        : searchParams.get('categoryCode') == '2'
+        ? 2
+        : 3;
 
     setCategoryCode(code);
 
     setColumn(
-      code == 1 ? carColumn : 
-      code == 2 ? campEquipmentColumn : packageColumn
+      code == 1 ? carColumn : code == 2 ? campEquipmentColumn : packageColumn
     );
 
     axios
-      .get(`/manage/item?categoryCode=${code}`)
+      .get(`https://wheelingcamp.store/manage/item?categoryCode=${code}`)
       .then((res) => {
         setData(res.data.itemList);
       })
@@ -154,7 +158,9 @@ const Item = () => {
 
   const changeData = (categoryCode) => {
     axios
-      .get(`/manage/item?categoryCode=${categoryCode}`)
+      .get(
+        `https://wheelingcamp.store/manage/item?categoryCode=${categoryCode}`
+      )
       .then((res) => {
         setData(res.data.itemList);
       })
@@ -166,7 +172,7 @@ const Item = () => {
   const deleteItem = (itemNo) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
       axios
-        .delete(`/manage/deleteItem?itemNo=${itemNo}`)
+        .delete(`https://wheelingcamp.store/manage/deleteItem?itemNo=${itemNo}`)
         .then((result) => {
           result.status == 200
             ? alert('삭제되었습니다.')
@@ -176,7 +182,7 @@ const Item = () => {
           console.log('error');
         });
     }
-  }
+  };
 
   const table = useMaterialReactTable({
     columns,
@@ -190,7 +196,11 @@ const Item = () => {
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="삭제">
-          <IconButton color="error" value={row.original.itemNo} onClick={deleteItem}>
+          <IconButton
+            color="error"
+            value={row.original.itemNo}
+            onClick={deleteItem}
+          >
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -200,9 +210,7 @@ const Item = () => {
       <>
         {['차량 관리', '캠핑용품 관리', '패키지 관리'].map((text, index) => {
           return (
-            <Button href={`/item?categoryCode=${index+1}`}>
-              {text}
-            </Button>
+            <Button href={`/item?categoryCode=${index + 1}`}>{text}</Button>
           );
         })}
       </>
