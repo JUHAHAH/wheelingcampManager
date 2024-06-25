@@ -13,16 +13,10 @@ const Member = () => {
   const [data, setData] = useState([]);
   console.log(window.location.origin);
   useEffect(() => {
-    axios
-      .get('https://wheelingcamp.store/manage/selectAllMember', {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((data) => {
-        console.log(data.data);
-        setData(data.data);
-      });
+    fetch('https://wheelingcamp.store/manage/selectAllMember').then((data) => {
+      console.log(data.data);
+      setData(data.data);
+    });
   }, []);
 
   const columns = [
