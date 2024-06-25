@@ -14,14 +14,9 @@ const Member = () => {
   console.log(window.location.origin);
   useEffect(() => {
     axios
-      .get('https://wheelingcamp.store/manage/selectAllMember', {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      .get('https://wheelingcamp.store/manage/selectAllMember')
       .then((data) => {
-        console.log(data.data);
+        console.log(data);
         setData(data.data);
       });
   }, []);
