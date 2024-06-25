@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react';
 
 const Member = () => {
   const [data, setData] = useState([]);
+  console.log(window.location.origin);
   useEffect(() => {
     axios
       .get('https://wheelingcamp.store/manage/selectAllMember')
