@@ -9,14 +9,16 @@ import {
 } from 'material-react-table';
 import React, { useEffect, useState } from 'react';
 
-const Member = async () => {
+const Member = () => {
   const [data, setData] = useState([]);
   console.log(window.location.origin);
-  await useEffect(() => {
-    fetch('https://wheelingcamp.store/manage/selectAllMember').then((data) => {
-      console.log(data.data);
-      setData(data.data);
-    });
+  useEffect(async () => {
+    await fetch('https://wheelingcamp.store/manage/selectAllMember').then(
+      (data) => {
+        console.log(data.data);
+        setData(data.data);
+      }
+    );
   }, []);
 
   const columns = [
