@@ -13,7 +13,7 @@ const Member = () => {
   const [data, setData] = useState([]);
   console.log(window.location.origin);
   useEffect(() => {
-    fetch('https://wheelingcamp.store/manage/selectAllMember').then((data) => {
+    await fetch('https://wheelingcamp.store/manage/selectAllMember').then((data) => {
       console.log(data.data);
       setData(data.data);
     });
