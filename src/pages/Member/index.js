@@ -12,16 +12,14 @@ import React, { useEffect, useState } from 'react';
 const Member = () => {
   const [data, setData] = useState([]);
 
-
-
   useEffect(() => {
-    axios.get('/manage/selectAllMember').then((data) => {
-      console.log(data.data);
-      setData(data.data);
-    });
+    axios
+      .get('https://wheelingcamp.store/manage/selectAllMember')
+      .then((data) => {
+        console.log(data.data);
+        setData(data.data);
+      });
   }, []);
-
-
 
   const columns = [
     {
@@ -35,8 +33,7 @@ const Member = () => {
       header: '닉네임',
       muiEditTextFieldProps: {
         required: true,
-        
-        },
+      },
       Cell: ({ renderedCellValue, row }) => (
         <Box
           sx={{
@@ -96,7 +93,7 @@ const Member = () => {
       header: '아이디',
       muiEditTextFieldProps: {
         required: true,
-        },
+      },
       Cell: ({ renderedCellValue, row }) => (
         <Box
           sx={{
@@ -116,14 +113,14 @@ const Member = () => {
       size: 40,
       muiEditTextFieldProps: {
         required: true,
-        },
+      },
     },
     {
       accessorKey: 'memberEmail',
       header: '이메일',
       muiEditTextFieldProps: {
         required: true,
-        },
+      },
     },
     {
       accessorKey: 'memberEnrollDate',
@@ -134,9 +131,9 @@ const Member = () => {
       accessorKey: 'memberPhoneNo',
       header: '전화번호',
       muiEditTextFieldProps: {
-      type:'number',
-      helperText: "-없이 작성해주세요.",
-      required: true,
+        type: 'number',
+        helperText: '-없이 작성해주세요.',
+        required: true,
       },
     },
     {
@@ -186,33 +183,42 @@ const Member = () => {
   const openDeleteConfirmModal = async (row) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
       await axios
-        .delete('/manage/deleteMember?memberNo=' + data[row.id].memberNo)
+        .delete(
+          'https://wheelingcamp.store/manage/deleteMember?memberNo=' +
+            data[row.id].memberNo
+        )
         .then((result) => {
           result.status == 200
             ? alert('삭제되었습니다.')
             : alert('다시 시도해주세요.');
-          
-      axios.get('/manage/selectAllMember').then((data) => {
-        setData(data.data);
-      });
-      });
+
+          axios.get('/manage/selectAllMember').then((data) => {
+            setData(data.data);
+          });
+        });
     }
   };
 
   // 멤버 생성
   const handleCreateUser = async ({ values, table }) => {
+    const requiredProperties = [
+      'memberName',
+      'memberNickName',
+      'memberId',
+      'memberEmail',
+      'memberPhoneNo',
+      'memberBirth',
+    ];
 
-    const requiredProperties = ['memberName','memberNickName','memberId','memberEmail','memberPhoneNo','memberBirth'];
-    
     function allRequiredPropertiesDefined(values) {
       for (const prop of requiredProperties) {
-        if (values[prop] === undefined||values[prop]=='') {
+        if (values[prop] === undefined || values[prop] == '') {
           return false;
         }
       }
       return true;
     }
-  
+
     // 모든 필수 속성이 정의되지 않은 경우 알림 후 함수 종료
     if (!allRequiredPropertiesDefined(values)) {
       alert('값을 모두 입력해주세요.');
@@ -220,29 +226,30 @@ const Member = () => {
     }
 
     await axios
-    .put('/manage/insertMember', null, { params: values })
-    .then((result) => {
-      
-      
-      table.setCreatingRow(null);
+      .put('https://wheelingcamp.store/manage/insertMember', null, {
+        params: values,
+      })
+      .then((result) => {
+        table.setCreatingRow(null);
 
-      axios.get('/manage/selectAllMember').then((data) => {
-        setData(data.data);
+        axios
+          .get('https://wheelingcamp.store/manage/selectAllMember')
+          .then((data) => {
+            setData(data.data);
+          });
       });
-    });
-  
   };
 
   // 멤버 수정
   const handleSaveUser = async ({ values, table }) => {
     await axios
-      .put('/manage/updateMember', null, { params: values })
+      .put('https://wheelingcamp.store/manage/updateMember', null, {
+        params: values,
+      })
       .then((result) => {
         table.setEditingRow(null);
       });
   };
-
-  
 
   const table = useMaterialReactTable({
     columns,
@@ -270,15 +277,15 @@ const Member = () => {
       </Box>
     ),
     renderTopToolbarCustomActions: ({ table }) => (
-      <div style={{marginTop:'10px'}}>
-      <Button
-        variant="contained"
-        onClick={() => {
-          table.setCreatingRow(createRow(table, { memberDelFl: 'N' }));
-        }}
-      >
-        신규 회원 생성
-      </Button>
+      <div style={{ marginTop: '10px' }}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            table.setCreatingRow(createRow(table, { memberDelFl: 'N' }));
+          }}
+        >
+          신규 회원 생성
+        </Button>
       </div>
     ),
   });
