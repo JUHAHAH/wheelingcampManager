@@ -36,6 +36,7 @@ const purchaseColumn = [
   {
     accessorKey: 'purchaseDate',
     header: '구매일',
+    enableEditing:false,
     
   },
   {
@@ -189,6 +190,13 @@ const Order = () => {
   const [columns, setColumns] = useState(purchaseColumn);
   const [payCode, setPayCode] = useState(1);
 
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+
   const changePayCode = (e) => {
     setPayCode(e.target.value);
     setColumns(
@@ -272,15 +280,17 @@ const openDeleteConfirmModal = async (row) => {
       onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //set only this row to be expanded
     }),
     renderTopToolbarCustomActions: ({ table }) => (
-      <>
+      <div>
+      
         {['주문 관리', '대여 관리'].map((text, index) => {
           return (
+   
             <Button href={`/order?payCode=${index+1}`}>
               {text}
             </Button>
           );
         })}
-      </>
+      </div>
     ),
     renderDetailPanel: ({ row }) => (
       <OrderDetail

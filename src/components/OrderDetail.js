@@ -71,12 +71,6 @@ const rentColumn = [
         </Box>
       ),
     },
-    {
-      accessorKey: 'carStockNo',
-      header: '차 재고번호',
-      enableEditing: false,
-      size: 50,
-    },
   ];
   const purchaseColumn = [
     {
@@ -121,6 +115,33 @@ const rentColumn = [
       size: 50,
       enableEditing: false,
     },
+    {
+      accessorKey: 'purchaseDetailDelFl',
+      header: '취소여부',
+      editVariant: 'select',
+      editSelectOptions: ['Y', 'N'],
+      size: 40,
+      Cell: ({ renderedCellValue, row }) => (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor:
+              renderedCellValue == 'N' ? '#238823CC' : '#D2222DCC' ,
+            borderRadius: '0.25rem',
+            width: '1.2rem',
+            display: 'flex',
+            justifyContent: 'center',
+            p: '0.25rem',
+            color: '#fff',
+            fontWeight: 'bold',
+            gap: '1rem',
+          }}
+          >
+          {renderedCellValue}
+        </Box>
+      ),
+    },
   ];
 
 const OrderDetail = (props) => {
@@ -141,7 +162,6 @@ const OrderDetail = (props) => {
 
 
 
-    console.log("확인할게"+ payCode);
     axios
       .get(
         `/manage/orderDetail?payCode=${props.payCode}&payNo=${props.payNo}`
@@ -150,7 +170,6 @@ const OrderDetail = (props) => {
         setData(data.data.payDetail);
         setPayCode(props.payCode);
     
-      console.log("확인할게요"+ payCode);
       })
       .catch((error) => {
         console.log('error');
@@ -207,13 +226,13 @@ const OrderDetail = (props) => {
     getRowId: (row) => row.id,
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        {payCode===2?(
+       
      <Tooltip title="수정">
           <IconButton onClick={() => table.setEditingRow(row)}>
             <EditIcon />
           </IconButton>
-        </Tooltip>) : null
-        }
+        </Tooltip>
+
       </Box>
     ),
 
