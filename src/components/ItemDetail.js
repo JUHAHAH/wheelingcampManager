@@ -263,7 +263,6 @@ const ItemDetail = (props) => {
                         <img
                           width="500px"
                           height="250px"
-                          object-fit="scale-down"
                           onClick={(e) => handleClick(e, index)}
                           src={
                             itemImageList[index] == ''
