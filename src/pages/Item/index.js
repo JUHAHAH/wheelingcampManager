@@ -14,32 +14,32 @@ const carColumn = [
   {
     accessorKey: 'itemNo',
     header: '상품 번호',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'categoryName',
     header: '카테고리 명',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'itemViewCount',
     header: '상품 조회수',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'carName',
     header: '차종',
     muiEditTextFieldProps: {
       required: true,
-      },
+    },
   },
   {
     accessorKey: 'carRentPrice',
     header: '차량 대여 비용',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
   {
     accessorKey: 'carGradeName',
@@ -47,30 +47,30 @@ const carColumn = [
     editVariant: 'select',
     muiEditTextFieldProps: {
       required: true,
-      },
+    },
   },
   {
     accessorKey: 'carPassengers',
     header: '최대 탑승 인원',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
   {
     accessorKey: 'carSleepCapacity',
     header: '최대 수면 인원',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
   {
     accessorKey: 'carFuel',
     header: '유종',
     muiEditTextFieldProps: {
       required: true,
-      },
+    },
   },
 ];
 
@@ -78,17 +78,17 @@ const campEquipmentColumn = [
   {
     accessorKey: 'itemNo',
     header: '상품 번호',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'categoryName',
     header: '카테고리 명',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'itemViewCount',
     header: '상품 조회수',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'equipmentCategoryName',
@@ -96,46 +96,46 @@ const campEquipmentColumn = [
     editVariant: 'select',
     muiEditTextFieldProps: {
       required: true,
-      },
+    },
   },
   {
     accessorKey: 'equipmentName',
     header: '캠핌용품 명',
     muiEditTextFieldProps: {
       required: true,
-      },
+    },
   },
   {
     accessorKey: 'equipmentRentPrice',
     header: '대여 비용',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
   {
     accessorKey: 'equipmentRentCount',
     header: '대여 재고',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
   {
     accessorKey: 'equipmentSellPrice',
     header: '판매 가격',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
   {
     accessorKey: 'equipmentSellCount',
     header: '판매 재고',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
 ];
 
@@ -143,32 +143,32 @@ const packageColumn = [
   {
     accessorKey: 'itemNo',
     header: '상품 번호',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'categoryName',
     header: '카테고리 명',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'itemViewCount',
     header: '상품 조회수',
-    enableEditing:false,
+    enableEditing: false,
   },
   {
     accessorKey: 'packageName',
     header: '패키지 명',
     muiEditTextFieldProps: {
       required: true,
-      },
+    },
   },
   {
     accessorKey: 'packagePrice',
     header: '패키지 대여 가격',
     muiEditTextFieldProps: {
       required: true,
-      type:'number',
-      },
+      type: 'number',
+    },
   },
 ];
 
@@ -193,29 +193,38 @@ const Item = () => {
   };
 
   useEffect(() => {
-    const code = searchParams.get("categoryCode") == null ? 1 :
-                searchParams.get("categoryCode") == '1' ? 1 :
-                searchParams.get("categoryCode") == '2' ? 2 : 3;
+    const code =
+      searchParams.get('categoryCode') == null
+        ? 1
+        : searchParams.get('categoryCode') == '1'
+        ? 1
+        : searchParams.get('categoryCode') == '2'
+        ? 2
+        : 3;
 
     setCategoryCode(code);
 
     axios
-      .get(`/manage/item?categoryCode=${code}`)
+      .get(`https://wheelingcamp.store/manage/item?categoryCode=${code}`)
       .then((res) => {
         setData(res.data.itemList);
 
-        switch(code) {
-          case 1 :
+        switch (code) {
+          case 1:
             carColumn[5].editSelectOptions = res.data.carGradeList;
             break;
-          case 2 :
-            campEquipmentColumn[3].editSelectOptions = res.data.equipmentCategoryList;
+          case 2:
+            campEquipmentColumn[3].editSelectOptions =
+              res.data.equipmentCategoryList;
             break;
         }
 
         setColumn(
-          code == 1 ? carColumn : 
-          code == 2 ? campEquipmentColumn : packageColumn
+          code == 1
+            ? carColumn
+            : code == 2
+            ? campEquipmentColumn
+            : packageColumn
         );
       })
       .catch((error) => {
@@ -225,7 +234,9 @@ const Item = () => {
 
   const changeData = (categoryCode) => {
     axios
-      .get(`/manage/item?categoryCode=${categoryCode}`)
+      .get(
+        `https://wheelingcamp.store/manage/item?categoryCode=${categoryCode}`
+      )
       .then((res) => {
         setData(res.data.itemList);
       })
@@ -234,37 +245,43 @@ const Item = () => {
       });
   };
 
-// 아이템
-const openDeleteConfirmModal = async (row) => {
-  if (window.confirm('정말 삭제하시겠습니까?')) {
-    await axios
-      .delete(`/manage/deleteItem?&itemNo=`+data[row.id].itemNo)
-      .then((result) => {
-        result.status == 200
-          ? alert('삭제되었습니다.')
-          : alert('다시 시도해주세요.');
-        
-    axios.get(`/manage/item?categoryCode=${categoryCode}`).then((data) => {
-      setData(data.data.itemList);
-    });
-    });
-  }
-};
+  // 아이템
+  const openDeleteConfirmModal = async (row) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      await axios
+        .delete(
+          `https://wheelingcamp.store/manage/deleteItem?&itemNo=` +
+            data[row.id].itemNo
+        )
+        .then((result) => {
+          result.status == 200
+            ? alert('삭제되었습니다.')
+            : alert('다시 시도해주세요.');
+
+          axios
+            .get(
+              `https://wheelingcamp.store/manage/item?categoryCode=${categoryCode}`
+            )
+            .then((data) => {
+              setData(data.data.itemList);
+            });
+        });
+    }
+  };
 
   const handleCreateItem = async ({ values, table }) => {
-
     const unRequiredProperties = ['itemNo', 'categoryName', 'itemViewCount'];
     let requiredProperties = [];
     columns.forEach((column) => {
-      if(unRequiredProperties.indexOf(column.accessorKey) < 0) {
+      if (unRequiredProperties.indexOf(column.accessorKey) < 0) {
         requiredProperties.push(column.accessorKey);
       }
     });
-    
+
     function allRequiredPropertiesDefined(values) {
       for (const prop of requiredProperties) {
-        if (values[prop] === undefined||values[prop]=='') {
-          console.log("이게 없음 : ", prop);
+        if (values[prop] === undefined || values[prop] == '') {
+          console.log('이게 없음 : ', prop);
           return false;
         }
       }
@@ -272,8 +289,8 @@ const openDeleteConfirmModal = async (row) => {
     }
 
     values['itemNo'] = 0;
-    values['categoryName'] = categoryCode == 1 ? '자동차' : 
-                              categoryCode == 2 ? '캠핑용품' : '패키지';
+    values['categoryName'] =
+      categoryCode == 1 ? '자동차' : categoryCode == 2 ? '캠핑용품' : '패키지';
     values['itemViewCount'] = 0;
     values['categoryCode'] = categoryCode;
 
@@ -282,18 +299,22 @@ const openDeleteConfirmModal = async (row) => {
       alert('값을 모두 입력해주세요.');
       return;
     }
-  
-    await axios
-    .put('/manage/insertItem', null, { params: values })
-    .then((result) => {
-      
-      table.setCreatingRow(null);
 
-      axios.get(`/manage/item?categoryCode=${categoryCode}`).then((data) => {
-        setData(data.data.itemList);
+    await axios
+      .put('https://wheelingcamp.store/manage/insertItem', null, {
+        params: values,
+      })
+      .then((result) => {
+        table.setCreatingRow(null);
+
+        axios
+          .get(
+            `https://wheelingcamp.store/manage/item?categoryCode=${categoryCode}`
+          )
+          .then((data) => {
+            setData(data.data.itemList);
+          });
       });
-    });
-  
   };
 
   const table = useMaterialReactTable({
@@ -307,21 +328,25 @@ const openDeleteConfirmModal = async (row) => {
     // @ts-ignore
     getRowId: (row) => row.id,
     defaultColumn: {
-      minSize: 20, 
-      maxSize: 50, 
+      minSize: 20,
+      maxSize: 50,
       size: 40,
     },
     renderRowActions: ({ row, table }) => (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip title="삭제">
-          <IconButton color="error" value={row.original.itemNo} onClick={() => openDeleteConfirmModal(row)}>
+          <IconButton
+            color="error"
+            value={row.original.itemNo}
+            onClick={() => openDeleteConfirmModal(row)}
+          >
             <DeleteIcon />
           </IconButton>
         </Tooltip>
       </Box>
     ),
     renderTopToolbarCustomActions: ({ table }) => (
-      <div style={{marginTop:'10px'}}>
+      <div style={{ marginTop: '10px' }}>
         <Button
           variant="contained"
           onClick={() => {
@@ -332,10 +357,7 @@ const openDeleteConfirmModal = async (row) => {
         </Button>
         {['차량 관리', '캠핑용품 관리', '패키지 관리'].map((text, index) => {
           return (
-            <Button 
-              href={`/item?categoryCode=${index+1}`}>
-              {text}
-            </Button>
+            <Button href={`/item?categoryCode=${index + 1}`}>{text}</Button>
           );
         })}
       </div>
@@ -348,10 +370,9 @@ const openDeleteConfirmModal = async (row) => {
         columns={columns}
       />
     ),
-
   });
 
-  return <MaterialReactTable table={table}/>;
+  return <MaterialReactTable table={table} />;
 };
 
 export default Item;

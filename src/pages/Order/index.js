@@ -1,4 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import axios from 'axios';
 import {
@@ -7,7 +8,6 @@ import {
 } from 'material-react-table';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
 import OrderDetail from '../../components/OrderDetail';
 
 const purchaseColumn = [
@@ -36,8 +36,7 @@ const purchaseColumn = [
   {
     accessorKey: 'purchaseDate',
     header: '구매일',
-    enableEditing:false,
-    
+    enableEditing: false,
   },
   {
     accessorKey: 'purchaseDelFl',
@@ -50,8 +49,7 @@ const purchaseColumn = [
         sx={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor:
-            renderedCellValue == 'N' ? '#238823CC' : '#D2222DCC',
+          backgroundColor: renderedCellValue == 'N' ? '#238823CC' : '#D2222DCC',
           borderRadius: '0.25rem',
           width: '1.2rem',
           justifyContent: 'center',
@@ -83,7 +81,6 @@ const purchaseColumn = [
     enableEditing: false,
     size: 50,
   },
- 
 ];
 
 const rentColumn = [
@@ -140,8 +137,7 @@ const rentColumn = [
         sx={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor:
-            renderedCellValue == 'N' ? '#238823CC' : '#D2222DCC',
+          backgroundColor: renderedCellValue == 'N' ? '#238823CC' : '#D2222DCC',
           borderRadius: '0.25rem',
           width: '1.2rem',
           justifyContent: 'center',
@@ -183,7 +179,6 @@ const rentColumn = [
   },
 ];
 
-
 const Order = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [data, setData] = useState([]);
@@ -196,37 +191,35 @@ const Order = () => {
     setValue(newValue);
   };
 
-
   const changePayCode = (e) => {
     setPayCode(e.target.value);
-    setColumns(
-      e.target.value == '1'
-        ? purchaseColumn
-        : rentColumn
-    );
+    setColumns(e.target.value == '1' ? purchaseColumn : rentColumn);
 
     changeData(e.target.value);
   };
 
-  useEffect(()=>{
-
-    const code = searchParams.get("payCode") == null ? 1 :
-    searchParams.get("payCode") == '1' ? 1 :2;
+  useEffect(() => {
+    const code =
+      searchParams.get('payCode') == null
+        ? 1
+        : searchParams.get('payCode') == '1'
+        ? 1
+        : 2;
 
     setPayCode(code);
 
-    setColumns(
-      code == 1 ? purchaseColumn : rentColumn
-    );
+    setColumns(code == 1 ? purchaseColumn : rentColumn);
 
-    axios.get(`/manage/order?payCode=${code}`).then((data) => {
-      setData(data.data.payList);
-    });
-  },[]);
+    axios
+      .get(`https://wheelingcamp.store/manage/order?payCode=${code}`)
+      .then((data) => {
+        setData(data.data.payList);
+      });
+  }, []);
 
   const changeData = (payCode) => {
     axios
-      .get(`/manage/order?payCode=${payCode}`)
+      .get(`https://wheelingcamp.store/manage/order?payCode=${payCode}`)
       .then((data) => {
         setData(data.data.payList);
       })
@@ -235,27 +228,36 @@ const Order = () => {
       });
   };
 
-// 주문 삭제
-const openDeleteConfirmModal = async (row) => {
-  if (window.confirm('정말 삭제하시겠습니까?')) {
-    await axios
-      .delete(`/manage/deleteOrder?&payNo=`+data[row.id].payNo)
-      .then((result) => {
-        result.status == 200
-          ? alert('삭제되었습니다.')
-          : alert('다시 시도해주세요.');
-        
-    axios.get(`/manage/order?payCode=${payCode}`).then((data) => {
-      setData(data.data.payList);
-    });
-    });
-  }
-};
+  // 주문 삭제
+  const openDeleteConfirmModal = async (row) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      await axios
+        .delete(
+          `https://wheelingcamp.store/manage/deleteOrder?&payNo=` +
+            data[row.id].payNo
+        )
+        .then((result) => {
+          result.status == 200
+            ? alert('삭제되었습니다.')
+            : alert('다시 시도해주세요.');
+
+          axios
+            .get(`https://wheelingcamp.store/manage/order?payCode=${payCode}`)
+            .then((data) => {
+              setData(data.data.payList);
+            });
+        });
+    }
+  };
 
   // 주문 수정
   const handleSaveUser = async ({ values, table }) => {
     await axios
-      .put(`/manage/updateOrder?payCode=${payCode}`, null, { params: values })
+      .put(
+        `https://wheelingcamp.store/manage/updateOrder?payCode=${payCode}`,
+        null,
+        { params: values }
+      )
       .then((result) => {
         table.setEditingRow(null);
       });
@@ -269,8 +271,8 @@ const openDeleteConfirmModal = async (row) => {
     editDisplayMode: 'modal',
     enableEditing: true,
     defaultColumn: {
-      minSize: 20, 
-      maxSize: 50, 
+      minSize: 20,
+      maxSize: 50,
       size: 40,
     },
     // @ts-ignore
@@ -281,14 +283,8 @@ const openDeleteConfirmModal = async (row) => {
     }),
     renderTopToolbarCustomActions: ({ table }) => (
       <div>
-      
         {['주문 관리', '대여 관리'].map((text, index) => {
-          return (
-   
-            <Button href={`/order?payCode=${index+1}`}>
-              {text}
-            </Button>
-          );
+          return <Button href={`/order?payCode=${index + 1}`}>{text}</Button>;
         })}
       </div>
     ),
@@ -315,8 +311,7 @@ const openDeleteConfirmModal = async (row) => {
         </Tooltip>
       </Box>
     ),
-   
-   });
+  });
 
   return <MaterialReactTable table={table} />;
 };
