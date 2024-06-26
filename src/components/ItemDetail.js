@@ -267,8 +267,7 @@ const ItemDetail = (props) => {
                           src={
                             itemImageList[index] == ''
                               ? defalutImg
-                              : 'https://wheelingcamp.store' +
-                                itemImageList[index]
+                              : itemImageList[index]
                           }
                         />
                       </li>
