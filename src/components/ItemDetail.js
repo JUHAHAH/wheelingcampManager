@@ -18,27 +18,31 @@ const ItemDetail = (props) => {
   const [imageBlobList, setImageBlobList] = useState([{}, {}, {}, {}, {}]);
   const fileRef = useRef([]);
 
-  const defalutImg 
-  = 'https://velog.velcdn.com/images/a_in/post/480497cc-10a8-4186-a052-a6b825ef487f/image.png';
+  const defalutImg =
+    'https://velog.velcdn.com/images/a_in/post/480497cc-10a8-4186-a052-a6b825ef487f/image.png';
 
   useEffect(() => {
     axios
       .get(
-        `/manage/itemDetail?categoryCode=${props.categoryCode}&itemNo=${props.itemNo}`
+        `https://wheelingcamp.store/manage/itemDetail?categoryCode=${props.categoryCode}&itemNo=${props.itemNo}`
       )
       .then((res) => {
         setData(res.data.item);
-        
-        switch(props.categoryCode) {
-          case 1 : setCarGradeList(res.data.carGradeList); break;
-          case 2 : setEquipmentCategoryList(res.data.equipmentCategoryList); break;
+
+        switch (props.categoryCode) {
+          case 1:
+            setCarGradeList(res.data.carGradeList);
+            break;
+          case 2:
+            setEquipmentCategoryList(res.data.equipmentCategoryList);
+            break;
         }
 
         let tempUrlList = ['', '', '', '', ''];
         res.data.item.itemImageList.forEach((e, index) => {
           tempUrlList[index] = e.imgPath + e.imgRename;
         });
-        
+
         requestBlob(res.data.item.itemImageList);
         setItemImageList(tempUrlList);
       })
@@ -51,7 +55,7 @@ const ItemDetail = (props) => {
     e.preventDefault();
 
     let item = {};
-    
+
     let formData = new FormData();
     e.target.querySelectorAll('input').forEach((input) => {
       if (input.type != 'file') {
@@ -59,46 +63,50 @@ const ItemDetail = (props) => {
       }
     });
 
-    imageBlobList.forEach(e => {
-      if(e != null) {
-        formData.append("itemImage", e);
+    imageBlobList.forEach((e) => {
+      if (e != null) {
+        formData.append('itemImage', e);
       }
     });
 
     console.log(imageBlobList);
-    
-    switch(props.categoryCode) {
-      case 1:
-        item["carGradeNo"] = carGradeList.indexOf(item.carGradeName) + 1;
 
-        if(item["carGradeNo"] <= 0) {
-          alert("소형, 중형, 대형, 캠핑카 중 1개만 입력해 주세요");
+    switch (props.categoryCode) {
+      case 1:
+        item['carGradeNo'] = carGradeList.indexOf(item.carGradeName) + 1;
+
+        if (item['carGradeNo'] <= 0) {
+          alert('소형, 중형, 대형, 캠핑카 중 1개만 입력해 주세요');
           return;
         }
         break;
-      case 2 :
-        item["equipmentCategoryCode"] = equipmentCategoryList.indexOf(item.equipmentCategoryName) + 1;
+      case 2:
+        item['equipmentCategoryCode'] =
+          equipmentCategoryList.indexOf(item.equipmentCategoryName) + 1;
 
-        if(item["equipmentCategoryCode"] <= 0) {
-          alert("캠핑용품 카테고리 내의 카테고리만 입력해 주세요");
+        if (item['equipmentCategoryCode'] <= 0) {
+          alert('캠핑용품 카테고리 내의 카테고리만 입력해 주세요');
           return;
         }
         break;
     }
-    
-    formData.append("item", new Blob( [JSON.stringify(item) ], { type: 'application/json' } ));
+
+    formData.append(
+      'item',
+      new Blob([JSON.stringify(item)], { type: 'application/json' })
+    );
 
     axios
-      .put(`/manage/updateItem`, formData, {
+      .put(`https://wheelingcamp.store/manage/updateItem`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       })
       .then((res) => {
-        if(res.data > 0) {
-          alert("수정 되었습니다.");
+        if (res.data > 0) {
+          alert('수정 되었습니다.');
         } else {
-          alert("수정 실패");
+          alert('수정 실패');
         }
       })
       .catch((error) => {
@@ -130,16 +138,16 @@ const ItemDetail = (props) => {
   };
 
   const handleClick = (e, index) => {
-    if(blockChangImage(e, index)) {
+    if (blockChangImage(e, index)) {
       return;
     }
     fileRef[index]?.click();
-  }
+  };
 
   const deleteImg = (e, index) => {
     const img = e.target.parentNode.querySelector('img');
 
-    if(img.src == defalutImg) {
+    if (img.src == defalutImg) {
       return;
     }
 
@@ -150,8 +158,8 @@ const ItemDetail = (props) => {
         return;
       }
     }
-    
-    if(!window.confirm("정말 삭제하시겠습니까?")) {
+
+    if (!window.confirm('정말 삭제하시겠습니까?')) {
       return;
     }
 
@@ -167,7 +175,7 @@ const ItemDetail = (props) => {
     let newImageBlobList = [...imageBlobList];
     newImageBlobList[index] = {};
 
-    console.log("before");
+    console.log('before');
 
     console.log(newItemImageList);
     console.log(itemImageList);
@@ -177,10 +185,10 @@ const ItemDetail = (props) => {
 
     setItemImageList(newItemImageList);
     setImageBlobList(newImageBlobList);
-  }
+  };
 
   const requestBlob = (blobList, index) => {
-    console.log("????");
+    console.log('????');
     console.log(blobList);
 
     const tempFileList = [{}, {}, {}, {}, {}];
@@ -188,16 +196,19 @@ const ItemDetail = (props) => {
       let imageUrl = e.imgPath + e.imgRename;
 
       fetch(imageUrl)
-      .then(response => response.blob())
-      .then(blob => {
-        let file = new File([blob], e.imgRename, { type: blob.type, lastModified: Date.now() });
-        tempFileList[index] = file;
-      })
-      .catch(error => console.error('Blob 변환 중 오류 발생', error));
+        .then((response) => response.blob())
+        .then((blob) => {
+          let file = new File([blob], e.imgRename, {
+            type: blob.type,
+            lastModified: Date.now(),
+          });
+          tempFileList[index] = file;
+        })
+        .catch((error) => console.error('Blob 변환 중 오류 발생', error));
     });
 
     setImageBlobList(tempFileList);
-  }
+  };
 
   return (
     <form onSubmit={updateItem}>
@@ -235,22 +246,30 @@ const ItemDetail = (props) => {
                     <>
                       <li>
                         <div>{title}</div>
-                        <button onClick={e => deleteImg(e, index)} type='button'>X</button>
+                        <button
+                          onClick={(e) => deleteImg(e, index)}
+                          type="button"
+                        >
+                          X
+                        </button>
                         <input
                           hidden
-                          ref={e => fileRef[index] = e}
+                          ref={(e) => (fileRef[index] = e)}
                           type="file"
                           onChange={(e) => {
                             changeImg(index, e);
                           }}
                         />
-                        <img 
-                          width='500px'
-                          height='250px'
-                          onClick={e => handleClick(e, index)}
-                          src={itemImageList[index] == '' ?
-                          defalutImg :
-                          itemImageList[index]} />
+                        <img
+                          width="500px"
+                          height="250px"
+                          onClick={(e) => handleClick(e, index)}
+                          src={
+                            itemImageList[index] == ''
+                              ? defalutImg
+                              : itemImageList[index]
+                          }
+                        />
                       </li>
                     </>
                   );
